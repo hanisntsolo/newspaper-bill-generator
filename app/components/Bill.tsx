@@ -27,7 +27,7 @@ const Bill: React.FC = () => {
   } = useBillContext();
 
   return (
-      <div className="p-4 border rounded-lg">
+      <div className="p-4 border rounded-lg border border-gray-300 dark:border-gray-500 dark:border-opacity-50">
           <div className="text-m">
           {/* Date display with responsive layout */}
           <div className="flex flex-col md:flex-row w-full gap-4 mb-4">
@@ -39,10 +39,10 @@ const Bill: React.FC = () => {
             </div>
           </div>
           </div>
-            <div className="p-4 border rounded-lg mt-4">
+            <div className="p-4 border rounded-lg mt-4 border border-gray-300 dark:border-gray-500 dark:border-opacity-50">
             {/* Flex layout for form inputs */}
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col md:flex-row w-full gap-4">
+            <div className="flex flex-col gap-4 mt-2">
+              <div className="flex flex-col md:flex-row w-full gap-4 mb-2">
                 <div className="flex-1">
                   <Input
                     value={weekdayRate.toString()}
@@ -104,10 +104,10 @@ const Bill: React.FC = () => {
               </div>
             </div>
           </div>
-        <div className="p-4 border rounded-lg mt-4">
+        <div className="p-4 border rounded-lg mt-4 border border-gray-300 dark:border-gray-500 dark:border-opacity-50">
         <div className="card">
           <div className="card">
-            <h3 className="text-lg font-bold text-center mb-4">Bill Summary</h3>
+            <h3 className="text-2xl font-bold text-center mb-4">Bill Summary</h3>
             <div className="grid grid-cols-12 gap-4">
               {/* Weekdays */}
               <div className="col-span-6">
@@ -140,11 +140,11 @@ const Bill: React.FC = () => {
               </div>
 
               {/* Total Bill */}
-              <div className="col-span-6">
-                <p className="text-lg font-bold">Total Bill:</p>
+              <div className="col-span-6 text-left align-text-bottom">
+                <p className="text-xl font-bold">Total Bill:</p>
               </div>
               <div className="col-span-6 text-right">
-                <p className="text-xl font-bold text-primary">
+                <p className="text-4xl font-bold text-primary">
                   {currencyLabel}{totalBill}
                 </p>
               </div>
