@@ -24,8 +24,10 @@ const Bill: React.FC = () => {
     setWeekendRate,
     weekdays,
     weekends,
+    serviceChargeRate,
+    setServiceChargeRate,
+    serviceChargeMonths,
     serviceCharge,
-    setServiceCharge,
     deductHolidayContributions,
     setDeductHolidayContributions,
     availableCountries,
@@ -178,12 +180,21 @@ const Bill: React.FC = () => {
 
             <div className="flex-1">
               <Input
-                value={serviceCharge.toString()}
-                onChange={(event) => setServiceCharge(Number(event.target.value))}
-                label={"Service Charge"}
+                value={serviceChargeRate.toString()}
+                onChange={(event) =>
+                  setServiceChargeRate(Number(event.target.value))
+                }
+                label={"Service Charge / Month"}
                 labelPlacement="outside"
                 type="number"
-                placeholder={serviceCharge.toString()}
+                startContent={
+                  <div className="pointer-events-none flex items-center">
+                    <span className="text-default-400 text-small">
+                      {currencyLabel}
+                    </span>
+                  </div>
+                }
+                placeholder={serviceChargeRate.toString()}
               />
             </div>
           </div>
@@ -247,7 +258,11 @@ const Bill: React.FC = () => {
           </div>
 
           <div className="col-span-6">
-            <p className="text-base">Service Charge:</p>
+            <p className="text-base">
+              Service Charge ({serviceChargeMonths} month
+              {serviceChargeMonths === 1 ? "" : "s"} x {currencyLabel}
+              {serviceChargeRate}/month):
+            </p>
           </div>
           <div className="col-span-6 text-right">
             <p className="text-base font-bold">
