@@ -122,8 +122,10 @@ interface BillContextProps {
   setWeekendsSkipped: (weekendsSkipped: number) => void;
   weekdaysSkipped: number;
   setWeekdaysSkipped: (weekdaysSkipped: number) => void;
+  serviceChargeRate: number;
+  setServiceChargeRate: (serviceChargeRate: number) => void;
+  serviceChargeMonths: number;
   serviceCharge: number;
-  setServiceCharge: (serviceCharge: number) => void;
   deductHolidayContributions: boolean;
   setDeductHolidayContributions: (deductHolidayContributions: boolean) => void;
   holidayEntries: HolidayEntry[];
@@ -134,6 +136,7 @@ interface BillContextProps {
 const BillContext = createContext<BillContextProps | undefined>(undefined);
 
 const HOLIDAY_TYPES = ["public"] as const;
+const DEFAULT_MONTHLY_SERVICE_CHARGE = 20;
 
 const buildDateKey = (year: number, month: number, day: number) =>
   `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -146,6 +149,18 @@ const parseDateKey = (dateKey: string) => {
 
 const toDateKey = (dateValue: DateValue) =>
   buildDateKey(dateValue.year, dateValue.month, dateValue.day);
+
+const getBillingMonthSpan = (start: DateValue, end: DateValue) => {
+  if (
+    end.year < start.year ||
+    (end.year === start.year && end.month < start.month) ||
+    (end.year === start.year && end.month === start.month && end.day < start.day)
+  ) {
+    return 0;
+  }
+
+  return (end.year - start.year) * 12 + (end.month - start.month) + 1;
+};
 
 const enumerateDateKeys = (start: DateValue, end: DateValue) => {
   const startDate = parseDateKey(toDateKey(start));
@@ -216,7 +231,9 @@ export const BillProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [selectedState, setSelectedState] = useState<string>("");
   const [weekendsSkipped, setWeekendsSkipped] = useState<number>(0);
   const [weekdaysSkipped, setWeekdaysSkipped] = useState<number>(0);
-  const [serviceCharge, setServiceCharge] = useState<number>(0);
+  const [serviceChargeRate, setServiceChargeRate] = useState<number>(
+    DEFAULT_MONTHLY_SERVICE_CHARGE
+  );
   const [deductHolidayContributions, setDeductHolidayContributions] =
     useState<boolean>(true);
 
@@ -256,6 +273,8 @@ export const BillProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         selectedHolidays: [],
         holidayEntries: [] as HolidayEntry[],
         holidayTotal: 0,
+        serviceChargeMonths: 0,
+        serviceCharge: 0,
         totalBill: 0,
       };
     }
@@ -366,6 +385,8 @@ export const BillProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       (total, holiday) => total + holiday.contribution,
       0
     );
+    const serviceChargeMonths = getBillingMonthSpan(startDate, endDate);
+    const serviceCharge = serviceChargeMonths * serviceChargeRate;
     const subtotal =
       billableDays.reduce(
         (total, day) => total + (day.billed ? day.rateApplied : 0),
@@ -382,13 +403,15 @@ export const BillProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       selectedHolidays: holidayEntries.map((holiday) => holiday.date),
       holidayEntries,
       holidayTotal,
+      serviceChargeMonths,
+      serviceCharge,
       totalBill,
     };
   }, [
     endDate,
     normalizedSelectedState,
     selectedCountryConfig.holidayCode,
-    serviceCharge,
+    serviceChargeRate,
     startDate,
     deductHolidayContributions,
     weekdayRate,
@@ -421,8 +444,10 @@ export const BillProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setWeekendsSkipped,
     weekdaysSkipped,
     setWeekdaysSkipped,
-    serviceCharge,
-    setServiceCharge,
+    serviceChargeRate,
+    setServiceChargeRate,
+    serviceChargeMonths: calculation.serviceChargeMonths,
+    serviceCharge: calculation.serviceCharge,
     deductHolidayContributions,
     setDeductHolidayContributions,
     holidayEntries: calculation.holidayEntries,
