@@ -9,8 +9,6 @@ import { Switch } from "@nextui-org/react";
 import { SunIcon } from "./components/icons/SunIcon";
 import { MoonIcon } from "./components/icons/MoonIcon";
 
-const holidays = ["2024-01-01", "2024-01-26"]; // Example holidays
-
 export default function Home() {
   const [isDarkMode, setIsDarkMode] = React.useState(true);
   const toggleTheme = () => {
@@ -43,7 +41,7 @@ export default function Home() {
               </div>
               <div className="flex flex-col md:flex-row gap-4 md:gap-8">
                 <div className="flex-1">
-                  <NextUICalendar holidays={holidays} />
+                  <NextUICalendar />
                 </div>
                 <div className="flex-1 mt-4">
                   <Bill />

@@ -1,13 +1,11 @@
 import React from "react";
 import { Calendar } from "@nextui-org/calendar";
-import { useBillContext } from "./BillContext";
-interface NextUICalendarProps {
-  holidays: string[];
-}
 
-const NextUICalendar: React.FC<NextUICalendarProps> = ({
-}) => {
+import { useBillContext } from "./BillContext";
+
+const NextUICalendar: React.FC = () => {
   const { startDate, setStartDate, endDate, setEndDate } = useBillContext();
+
   return (
     <div className="p-4 border rounded-lg mt-4 border border-gray-300 dark:border-gray-500 dark:border-opacity-50">
       <div className="flex flex-col md:flex-col gap-4">
